@@ -63,7 +63,8 @@ namespace AspNetCoreBenchmark
                 });
             });
 
-            app.Map("/time", (builder) => {
+            app.Map("/time", (builder) => 
+            {
                 builder.Run(async (context) =>
                 {
                     await context.Response.WriteAsync($"The Time is: {DateTime.Now.ToString("hh:mm:ss tt")}");
