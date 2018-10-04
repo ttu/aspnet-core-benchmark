@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -11,9 +12,10 @@ namespace AspNetCoreBenchmark
     {
         public static void Main(string[] args)
         {
-            // Select correct Startup
+            // Select correct Startup:
             // StartupMinimal
             // StartupMap
+            // StartupRouteBuilder
             // StartupController
             
             var host = new WebHostBuilder()
@@ -70,6 +72,24 @@ namespace AspNetCoreBenchmark
                     await context.Response.WriteAsync($"The Time is: {DateTime.Now.ToString("hh:mm:ss tt")}");
                 });
             });
+        }
+    }
+
+    public class StartupRouteBuilder
+    {
+        private static string response = "Hello World!";
+
+        public void ConfigureServices(IServiceCollection services) => services.AddRouting();
+        
+        public void Configure(IApplicationBuilder app)
+        {
+            var routeBuilder = new RouteBuilder(app);
+
+            routeBuilder.MapGet("", (context) =>context.Response.WriteAsync(response));
+            routeBuilder.MapGet("time", (context) =>context.Response.WriteAsync($"The Time is: {DateTime.Now.ToString("hh:mm:ss tt")}"));
+
+            var routes = routeBuilder.Build();
+            app.UseRouter(routes);
         }
     }
 
